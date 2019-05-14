@@ -1,22 +1,35 @@
+/**
+* Renana Yanovsky Eichenwald
+* 308003862
+*/
 #include <sys/types.h>
 #include "osqueue.h"
 #ifndef __THREAD_POOL__
 #define __THREAD_POOL__
 
+/**
+ * struct task Task
+ */
 typedef struct task
 {
     void(*function)(void*);
     void *args;
 }Task;
 
+/**
+ * enum errors
+ */
 typedef enum{
     threadpoolInvalid = -1,
     threadpoolLockFailure = -2,
-    threadpoolFULLQueue = -3,
-    threadpoolShutdown = -4,
-    threadpoolFail = -5
+    threadpoolShutdown = -3,
+    threadpoolFail = -4
 }threadpool_Error;
 
+/**
+ * struct thread_pool ThreadPool
+ *
+ */
 typedef struct thread_pool
 {
     OSQueue* tasksQueue;
@@ -24,12 +37,16 @@ typedef struct thread_pool
     pthread_cond_t notify;
     pthread_t *thread;
     int maxNumOfThread;
+    Task* task;
     int toStop;
     int inProsses;
-    Task* task;
+    int pendingTasks;
 
 }ThreadPool;
 
+/**
+ * enum of destroy
+ */
 typedef enum{
     waitForTasksbeforeShut = 1
 }destroy_flag;
